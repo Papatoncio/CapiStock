@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "236558028259",
+    "project_id": "capistock-1c0f1",
+    "storage_bucket": "capistock-1c0f1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:236558028259:android:a85367fa62cf20469ee4d6",
+        "android_client_info": {
+          "package_name": "com.capistock.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwHky9xdW6xBdSjkD-XubNLhyQo7kCFl4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
