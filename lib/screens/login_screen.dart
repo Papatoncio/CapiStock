@@ -19,7 +19,8 @@ class _LoginScreenState extends State<LoginScreen> {
         email: _emailController.text,
         password: _passwordController.text,
       );
-      // Si la autenticación es exitosa, navega a la pantalla Home.
+      // Si la autenticación es exitosa, navega a la pantalla Home y muestra Snackbar de éxito.
+      _showLoginSnackBar('Inicio de sesión exitoso');
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => HomeScreen()),
       );
@@ -28,6 +29,23 @@ class _LoginScreenState extends State<LoginScreen> {
       _showErrorSnackBar(
           'Credenciales incorrectas, por favor verifica tu correo y contraseña.');
     }
+  }
+
+  void _showLoginSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Center(
+          child: Text(
+            message,
+            style: const TextStyle(
+              color: Color(0xFF132436),
+              backgroundColor: Color(0xFF3AEE1A), // Color de la alerta
+            ),
+          ),
+        ),
+        backgroundColor: const Color(0xFF3AEE1A), // Color de la alerta
+      ),
+    );
   }
 
   void _showErrorSnackBar(String message) {
@@ -50,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Inicio de Sesión')),
+      appBar: AppBar(title: const Text('Inicio de Sesión')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
