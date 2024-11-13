@@ -1,10 +1,8 @@
 import 'package:capistock/api/firebaseapi.dart';
+import 'package:capistock/util/routes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart';
-import 'screens/login_screen.dart';
-import 'screens/register_screen.dart';
 import 'util/apptheme.dart';
 
 void main() async {
@@ -26,11 +24,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Firebase Auth',
       theme: Apptheme().themeData,
       initialRoute: '/',
-      routes: {
-        '/': (context) => LoginScreen(),
-        '/register': (context) => RegisterScreen(),
-        '/home': (context) => HomeScreen(),
-      },
+      routes: Routes().routes,
     );
   }
 }
