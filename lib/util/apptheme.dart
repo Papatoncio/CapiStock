@@ -32,7 +32,7 @@ class Apptheme {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         textStyle: const TextStyle(
-          color: Color(0xFFEE891A), // Botón con color (#ee891a)
+          color: Color(0xFFEE891A), // Botï¿½n con color (#ee891a)
         ),
         backgroundColor: const Color(0xFFF8FADD),
         shape: RoundedRectangleBorder(

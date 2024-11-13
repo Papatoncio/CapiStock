@@ -1,4 +1,4 @@
-package com.example.capistock
+package com.capistock.app
 
 import io.flutter.embedding.android.FlutterActivity
 
