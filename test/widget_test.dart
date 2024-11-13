@@ -10,10 +10,21 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:capistock/main.dart';
 
+import 'package:json_theme_plus/json_theme_plus.dart';
+
+import 'package:flutter/services.dart'; // For rootBundle
+import 'dart:convert'; // For jsonDecode
+
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+    final themeStr = await rootBundle.loadString('assets/appainter_theme.json');
+    final themeJson = jsonDecode(themeStr);
+    final theme = ThemeDecoder.decodeThemeData(themeJson)!;
+
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+    await tester.pumpWidget(MyApp(
+      theme: theme,
+    ));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
