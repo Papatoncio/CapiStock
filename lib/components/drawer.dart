@@ -10,9 +10,6 @@ class SideBarMenu extends StatefulWidget {
 class _SideBarMenuState extends State<SideBarMenu> {
   int _selectedIndex = 0;
 
-  static const textStyle =
-      TextStyle(color: Colors.black, backgroundColor: Colors.transparent);
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -34,21 +31,20 @@ class _SideBarMenuState extends State<SideBarMenu> {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.home, color: Colors.black),
-            title: const Text('Inicio', style: textStyle),
+            leading: const Icon(Icons.home),
+            title: const Text('Inicio'),
             selected: _selectedIndex == 0,
             onTap: () {
               // Update the state of the app
               _onItemTapped(0);
               // Then close the drawer
-              Navigator.pop(context);
               Navigator.of(context).pop();
               Navigator.of(context).pushNamed('/home');
             },
           ),
           ListTile(
-            leading: const Icon(Icons.adf_scanner, color: Colors.black),
-            title: const Text('Productos', style: textStyle),
+            leading: const Icon(Icons.adf_scanner),
+            title: const Text('Productos'),
             selected: _selectedIndex == 1,
             onTap: () {
               // Update the state of the app
@@ -59,8 +55,8 @@ class _SideBarMenuState extends State<SideBarMenu> {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.bar_chart, color: Colors.black),
-            title: const Text('Reportes', style: textStyle),
+            leading: const Icon(Icons.bar_chart),
+            title: const Text('Reportes'),
             selected: _selectedIndex == 2,
             onTap: () {
               // Update the state of the app

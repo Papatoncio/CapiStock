@@ -3,7 +3,6 @@ import 'package:capistock/util/routes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
-import 'util/apptheme.dart';
 import 'package:json_theme_plus/json_theme_plus.dart';
 
 import 'package:flutter/services.dart'; // For rootBundle
@@ -17,17 +16,28 @@ void main() async {
 
   await FirebaseApi().initNotifications();
 
-  final themeStr = await rootBundle.loadString('assets/appainter_theme.json');
-  final themeJson = jsonDecode(themeStr);
-  final theme = ThemeDecoder.decodeThemeData(themeJson)!;
+  final lightThemeStr =
+      await rootBundle.loadString('assets/appainter_light_theme.json');
+  final lightThemeJson = jsonDecode(lightThemeStr);
+  final lightTheme = ThemeDecoder.decodeThemeData(lightThemeJson)!;
 
-  runApp(MyApp(theme: theme));
+  final darkThemeStr =
+      await rootBundle.loadString('assets/appainter_dark_theme.json');
+  final darkThemeJson = jsonDecode(darkThemeStr);
+  final darkTheme = ThemeDecoder.decodeThemeData(darkThemeJson)!;
+
+  runApp(MyApp(
+    theme: lightTheme,
+    themeDark: darkTheme,
+  ));
 }
 
 class MyApp extends StatelessWidget {
   final ThemeData theme;
+  final ThemeData themeDark;
 
-  const MyApp({Key? key, required this.theme}) : super(key: key);
+  const MyApp({Key? key, required this.theme, required this.themeDark})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +45,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Firebase Auth',
       theme: theme,
+      darkTheme: themeDark,
+      themeMode: ThemeMode.system,
       initialRoute: '/',
       routes: Routes().routes,
     );
