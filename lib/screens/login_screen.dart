@@ -95,28 +95,18 @@ class _LoginScreenState extends State<LoginScreen> {
               obscureText: true,
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
+            FilledButton(
               onPressed: _login,
-              child: const Text(
-                'Iniciar Sesión',
-                style: TextStyle(
-                  color: Color(0xFF132436),
-                ),
-              ),
+              child: const Text('Iniciar Sesión'),
             ),
+            const SizedBox(height: 16),
             TextButton(
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => RegisterScreen()),
                 );
               },
-              child: const Text(
-                '¿No tienes una cuenta? Regístrate aquí',
-                style: TextStyle(
-                  color: Colors.white,
-                  backgroundColor: Color(0xFF132436),
-                ),
-              ),
+              child: const Text('¿No tienes una cuenta? Regístrate aquí'),
             ),
           ],
         ),

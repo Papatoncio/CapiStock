@@ -39,13 +39,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Bienvenido, estás autenticado',
-              style: TextStyle(
-                color: Colors.white,
-                backgroundColor: Color(0xFF132436),
-              ),
-            ),
+            const Text('Bienvenido, estás autenticado'),
           ],
         ),
       ),
