@@ -1,5 +1,6 @@
 import 'package:capistock/screens/home_screen.dart';
 import 'package:capistock/screens/login_screen.dart';
+import 'package:capistock/screens/products_screen.dart';
 import 'package:capistock/screens/register_screen.dart';
 
 class Routes {
@@ -7,5 +8,6 @@ class Routes {
     '/': (context) => LoginScreen(),
     '/register': (context) => RegisterScreen(),
     '/home': (context) => HomeScreen(),
+    '/products': (context) => ProductsScreen(),
   };
 }

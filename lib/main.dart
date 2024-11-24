@@ -1,12 +1,13 @@
+import 'dart:convert'; // For jsonDecode
+
 import 'package:capistock/api/firebaseapi.dart';
 import 'package:capistock/util/routes.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // For rootBundle
 import 'package:json_theme_plus/json_theme_plus.dart';
 
-import 'package:flutter/services.dart'; // For rootBundle
-import 'dart:convert'; // For jsonDecode
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
