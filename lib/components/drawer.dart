@@ -51,7 +51,7 @@ class _SideBarMenuState extends State<SideBarMenu> {
               _onItemTapped(1);
               // Then close the drawer
               Navigator.of(context).pop();
-              Navigator.of(context).pushNamed('/home');
+              Navigator.of(context).pushNamed('/products');
             },
           ),
           ListTile(
