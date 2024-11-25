@@ -5,6 +5,7 @@ import 'package:capistock/util/routes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // For rootBundle
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:json_theme_plus/json_theme_plus.dart';
 
 import 'firebase_options.dart';
@@ -26,6 +27,8 @@ void main() async {
       await rootBundle.loadString('assets/appainter_dark_theme.json');
   final darkThemeJson = jsonDecode(darkThemeStr);
   final darkTheme = ThemeDecoder.decodeThemeData(darkThemeJson)!;
+
+  await dotenv.load(fileName: ".env");
 
   runApp(MyApp(
     theme: lightTheme,
