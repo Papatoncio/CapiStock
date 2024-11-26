@@ -1,3 +1,4 @@
+import 'package:capistock/infraestructure/network/category_service.dart';
 import 'package:capistock/infraestructure/network/product_service.dart';
 import 'package:capistock/models/product.dart';
 import 'package:capistock/screens/product_details_screen.dart';
@@ -13,6 +14,7 @@ class ProductsScreen extends StatefulWidget {
 class _ProductsScreenState extends State<ProductsScreen> {
   late Future<List<Product>> _productsFuture;
   final ProductService _productService = new ProductService();
+  final CategoryService _categoryService = new CategoryService();
 
   @override
   void initState() {
@@ -122,7 +124,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   ),
                   const SizedBox(height: 4.0),
                   Text(
-                    product.categoria,
+                    _categoryService.findNombreCategoriaById(product.categoria),
                     style: const TextStyle(color: Colors.grey),
                   ),
                   const SizedBox(height: 4.0),

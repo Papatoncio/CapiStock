@@ -1,7 +1,7 @@
 class Product {
   int id;
   String nombre;
-  String categoria;
+  int categoria;
   int cantidad;
   bool activo;
   String image;
@@ -19,7 +19,7 @@ class Product {
     return Product(
       id: json['id'],
       nombre: json['nombre'],
-      categoria: json['id_categoria'].toString(),
+      categoria: json['id_categoria'],
       cantidad: json['stock'],
       activo: json['id_estado'] == 1,
       image: '', // Ajustar según los datos recibidos

@@ -1,4 +1,6 @@
+import 'package:capistock/infraestructure/network/category_service.dart';
 import 'package:capistock/models/product.dart';
+import 'package:capistock/util/staticVariables.dart';
 import 'package:flutter/material.dart';
 
 class ProductDetailScreen extends StatefulWidget {
@@ -11,36 +13,37 @@ class ProductDetailScreen extends StatefulWidget {
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  final CategoryService _categoryService = CategoryService();
   late TextEditingController _nameController;
-  late TextEditingController _categoryController;
   late TextEditingController _stockController;
+  int? _selectedCategoryId;
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.product.nombre);
-    _categoryController = TextEditingController(text: widget.product.categoria);
     _stockController =
         TextEditingController(text: widget.product.cantidad.toString());
+    _selectedCategoryId =
+        widget.product.categoria; // Initialize selected category
   }
 
   @override
   void dispose() {
     _nameController.dispose();
-    _categoryController.dispose();
     _stockController.dispose();
     super.dispose();
   }
 
   void _saveChanges() {
-    // Simula la lógica para guardar los cambios, podrías enviar esto al backend
+    // Save logic
     setState(() {
       widget.product.nombre = _nameController.text;
-      widget.product.categoria = _categoryController.text;
+      widget.product.categoria = _selectedCategoryId ?? 0;
       widget.product.cantidad = int.tryParse(_stockController.text) ?? 0;
     });
 
-    // Muestra un mensaje de confirmación
+    // Show confirmation message
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Cambios guardados.')),
     );
@@ -60,9 +63,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               decoration: const InputDecoration(labelText: 'Nombre'),
             ),
             const SizedBox(height: 16.0),
-            TextField(
-              controller: _categoryController,
+            DropdownButtonFormField<int>(
+              value: _selectedCategoryId,
               decoration: const InputDecoration(labelText: 'Categoría'),
+              items: StaticVariables.categoriesList.map((category) {
+                return DropdownMenuItem<int>(
+                  value: category.id,
+                  child: Text(category.nombre),
+                );
+              }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  _selectedCategoryId = value;
+                });
+              },
             ),
             const SizedBox(height: 16.0),
             TextField(
