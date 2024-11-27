@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:capistock/infraestructure/network/product_service.dart';
 import 'package:capistock/util/staticVariables.dart';
+import 'package:capistock/util/util.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -25,17 +26,37 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage() async {
-    final XFile? pickedFile =
-        await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _imagePath = pickedFile.path;
-        _imageUrlController.text = _imagePath!;
-      });
+    final ImageSource? source = await showDialog<ImageSource>(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          title: const Text('Seleccionar imagen'),
+          children: <Widget>[
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(context, ImageSource.camera),
+              child: const Text('Tomar Foto'),
+            ),
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(context, ImageSource.gallery),
+              child: const Text('Seleccionar de Galería'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (source != null) {
+      final XFile? pickedFile = await _picker.pickImage(source: source);
+      if (pickedFile != null) {
+        setState(() {
+          _imagePath = pickedFile.path;
+          _imageUrlController.text = _imagePath!;
+        });
+      }
     }
   }
 
-  void _saveProduct() {
+  void _saveProduct() async {
     if (_nameController.text.isEmpty ||
         _priceController.text.isEmpty ||
         _stockController.text.isEmpty) {
@@ -45,7 +66,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
       return;
     }
 
-    final newProduct = {
+    if (_imagePath == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor, seleccione una imagen')),
+      );
+      return;
+    }
+
+    final Map<String, dynamic> newProduct = {
       "nombre": _nameController.text,
       "precio": _priceController.text,
       "stock": _stockController.text,
@@ -53,17 +81,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
       "id_categoria": (_selectedCategoryId ?? 0).toString(),
     };
 
-    print({"imagen": _imageUrlController.text});
-
-    // Aquí podrías llamar a tu servicio para guardar el producto
-    print(newProduct);
-
-    _productService.saveProduct(newProduct);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Producto agregado correctamente')),
-    );
-    Navigator.pop(context);
+    try {
+      _productService.saveProduct(File(_imagePath!), newProduct);
+      Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al guardar el producto: $e')),
+      );
+    }
   }
 
   @override
@@ -74,7 +99,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               TextField(
                 controller: _nameController,
@@ -125,24 +150,44 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 ],
               ),
               const SizedBox(height: 16.0),
-              TextField(
-                controller: _imageUrlController,
-                decoration:
-                    const InputDecoration(labelText: 'URL de la imagen'),
-              ),
-              const SizedBox(height: 16.0),
               ElevatedButton.icon(
                 onPressed: _pickImage,
-                icon: const Icon(Icons.image),
-                label: const Text('Seleccionar Imagen'),
+                icon: const Icon(Icons.camera_alt),
+                label: const Text('Tomar Foto'),
               ),
               if (_imagePath != null) ...[
                 const SizedBox(height: 16.0),
-                Image.file(
-                  File(_imagePath!),
-                  height: 200,
-                  fit: BoxFit.cover,
-                ),
+                (Uri.tryParse(_imagePath.toString())?.hasAbsolutePath == true)
+                    ? (Util.isValidImageUrl(_imagePath.toString()))
+                        ? Image.network(
+                            height: 200,
+                            _imagePath.toString(),
+                            fit: BoxFit.contain,
+                            width: double.infinity,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                color: Colors.grey[200],
+                                alignment: Alignment.center,
+                                child: const Text(
+                                  'Error al cargar',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              );
+                            },
+                          )
+                        : Image.file(
+                            File(_imagePath!),
+                            height: 200,
+                            fit: BoxFit.cover,
+                          )
+                    : Container(
+                        color: Colors.grey[200],
+                        alignment: Alignment.center,
+                        child: const Text(
+                          'Sin imagen',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ),
               ],
               const SizedBox(height: 16.0),
               Center(
