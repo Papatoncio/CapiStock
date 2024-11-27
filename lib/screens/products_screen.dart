@@ -1,6 +1,7 @@
 import 'package:capistock/infraestructure/network/category_service.dart';
 import 'package:capistock/infraestructure/network/product_service.dart';
 import 'package:capistock/models/product.dart';
+import 'package:capistock/screens/add_product_screen.dart'; // Asegúrate de tener esta pantalla implementada
 import 'package:capistock/screens/product_details_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -13,8 +14,8 @@ class ProductsScreen extends StatefulWidget {
 
 class _ProductsScreenState extends State<ProductsScreen> {
   late Future<List<Product>> _productsFuture;
-  final ProductService _productService = new ProductService();
-  final CategoryService _categoryService = new CategoryService();
+  final ProductService _productService = ProductService();
+  final CategoryService _categoryService = CategoryService();
 
   @override
   void initState() {
@@ -54,6 +55,25 @@ class _ProductsScreenState extends State<ProductsScreen> {
             ),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Navega a la pantalla para agregar producto
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AddProductScreen(),
+            ),
+          ).then((value) {
+            if (value == true) {
+              // Si se agregó un producto, recarga la lista
+              setState(() {
+                _productsFuture = _productService.fetchProducts();
+              });
+            }
+          });
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }

@@ -44,7 +44,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     super.dispose();
   }
 
-  void _saveChanges() {
+  void _updateProduct() {
+    if (_nameController.text.isEmpty ||
+        _priceController.text.isEmpty ||
+        _stockController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor, complete todos los campos')),
+      );
+      return;
+    }
+
     final updatedProduct = {
       "nombre": _nameController.text,
       "precio": _priceController.text,
@@ -121,7 +130,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
             const SizedBox(height: 16.0),
             ElevatedButton(
-              onPressed: _saveChanges,
+              onPressed: _updateProduct,
               child: const Text('Guardar Cambios'),
             ),
           ],

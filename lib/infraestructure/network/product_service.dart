@@ -55,4 +55,30 @@ class ProductService {
       throw Exception('Error al realizar la solicitud: $error');
     }
   }
+
+  void saveProduct(newProduct) async {
+    String url =
+        '${dotenv.get('BASE_URL', fallback: '')}api/products/saveProduct/';
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: newProduct,
+      );
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = json.decode(response.body);
+        if (jsonResponse['status'] == 0) {
+          Util.showSnackBar(jsonResponse['message']);
+        } else {
+          throw Exception('Error en la respuesta del servidor.');
+        }
+      } else if (response.statusCode == 404) {
+        throw Exception('Ruta no encontrada en el servidor (404).');
+      } else {
+        throw Exception('Error del servidor: ${response.statusCode}');
+      }
+    } catch (error) {
+      throw Exception('Error al realizar la solicitud: $error');
+    }
+  }
 }
