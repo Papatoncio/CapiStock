@@ -1,4 +1,5 @@
 import 'package:capistock/infraestructure/network/category_service.dart';
+import 'package:capistock/infraestructure/network/product_service.dart';
 import 'package:capistock/models/product.dart';
 import 'package:capistock/util/staticVariables.dart';
 import 'package:flutter/material.dart';
@@ -13,10 +14,14 @@ class ProductDetailScreen extends StatefulWidget {
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  final ProductService _productService = ProductService();
   final CategoryService _categoryService = CategoryService();
   late TextEditingController _nameController;
   late TextEditingController _stockController;
+  late TextEditingController _priceController;
   int? _selectedCategoryId;
+  late bool _isActive;
+  int? productId;
 
   @override
   void initState() {
@@ -24,29 +29,38 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     _nameController = TextEditingController(text: widget.product.nombre);
     _stockController =
         TextEditingController(text: widget.product.cantidad.toString());
-    _selectedCategoryId =
-        widget.product.categoria; // Initialize selected category
+    _priceController =
+        TextEditingController(text: widget.product.precio.toString());
+    _selectedCategoryId = widget.product.categoria;
+    _isActive = widget.product.activo;
+    productId = widget.product.id;
   }
 
   @override
   void dispose() {
     _nameController.dispose();
     _stockController.dispose();
+    _priceController.dispose();
     super.dispose();
   }
 
   void _saveChanges() {
-    // Save logic
+    final updatedProduct = {
+      "nombre": _nameController.text,
+      "precio": _priceController.text,
+      "stock": _stockController.text,
+      "id_estado": (_isActive ? 1 : 2).toString(),
+      "id_categoria": (_selectedCategoryId ?? 0).toString(),
+    };
+
+    _productService.updateProduct(updatedProduct, productId);
+
     setState(() {
       widget.product.nombre = _nameController.text;
       widget.product.categoria = _selectedCategoryId ?? 0;
       widget.product.cantidad = int.tryParse(_stockController.text) ?? 0;
+      widget.product.activo = _isActive;
     });
-
-    // Show confirmation message
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Cambios guardados.')),
-    );
   }
 
   @override
@@ -56,11 +70,23 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             TextField(
               controller: _nameController,
               decoration: const InputDecoration(labelText: 'Nombre'),
+            ),
+            const SizedBox(height: 16.0),
+            TextField(
+              controller: _priceController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(labelText: 'Precio'),
+            ),
+            const SizedBox(height: 16.0),
+            TextField(
+              controller: _stockController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(labelText: 'Cantidad en stock'),
             ),
             const SizedBox(height: 16.0),
             DropdownButtonFormField<int>(
@@ -79,10 +105,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               },
             ),
             const SizedBox(height: 16.0),
-            TextField(
-              controller: _stockController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Cantidad en stock'),
+            Row(
+              children: [
+                const Text('Activo'),
+                const SizedBox(width: 8.0),
+                Checkbox(
+                  value: _isActive,
+                  onChanged: (value) {
+                    setState(() {
+                      _isActive = value ?? false;
+                    });
+                  },
+                ),
+              ],
             ),
             const SizedBox(height: 16.0),
             ElevatedButton(

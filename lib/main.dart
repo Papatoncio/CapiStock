@@ -3,6 +3,7 @@ import 'dart:convert'; // For jsonDecode
 import 'package:capistock/api/firebaseapi.dart';
 import 'package:capistock/infraestructure/network/category_service.dart';
 import 'package:capistock/util/routes.dart';
+import 'package:capistock/util/staticVariables.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // For rootBundle
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       initialRoute: '/',
       routes: Routes().routes,
+      navigatorKey: StaticVariables.navState,
     );
   }
 }
