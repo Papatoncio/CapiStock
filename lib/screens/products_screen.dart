@@ -107,7 +107,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                         Uri.tryParse(product.image)?.hasAbsolutePath == true)
                     ? Image.network(
                         product.image,
-                        fit: BoxFit.cover,
+                        fit: BoxFit.contain,
                         width: double.infinity,
                         errorBuilder: (context, error, stackTrace) {
                           return Container(

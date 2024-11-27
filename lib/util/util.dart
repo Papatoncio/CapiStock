@@ -18,4 +18,15 @@ class Util {
       ),
     );
   }
+
+  static bool isValidImageUrl(String path) {
+    // Expresión regular para verificar si la ruta es una URL
+    final Uri? uri = Uri.tryParse(path);
+    if (uri != null && uri.hasAbsolutePath) {
+      // Verificar si la URL comienza con 'http' o 'https'
+      return (uri.scheme == 'http' || uri.scheme == 'https') &&
+          (uri.path.isNotEmpty);
+    }
+    return false;
+  }
 }

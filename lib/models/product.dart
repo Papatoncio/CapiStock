@@ -25,7 +25,7 @@ class Product {
       categoria: json['id_categoria'],
       cantidad: json['stock'],
       activo: json['id_estado'] == 1,
-      image: '', // Ajustar según los datos recibidos
+      image: json['imagen'] ?? '',
     );
   }
 }
