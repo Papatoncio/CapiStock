@@ -14,11 +14,6 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  await FirebaseApi().initNotifications();
 
   final lightThemeStr =
       await rootBundle.loadString('assets/appainter_light_theme.json');
@@ -33,6 +28,12 @@ void main() async {
   await dotenv.load(fileName: ".env");
 
   loadParams();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  await FirebaseApi().initNotifications();
 
   runApp(MyApp(
     theme: lightTheme,
