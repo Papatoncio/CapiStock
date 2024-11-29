@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:capistock/infraestructure/network/notification_service.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -10,6 +13,7 @@ Future<void> handleBackgroundMessage(RemoteMessage message) async {
 }
 
 class FirebaseApi {
+  final NotificationService _notificationService = NotificationService();
   final _firebaseMessaging = FirebaseMessaging.instance;
 
   final _androidChannel = const AndroidNotificationChannel(
@@ -70,9 +74,35 @@ class FirebaseApi {
   Future<void> initNotifications() async {
     await _firebaseMessaging.requestPermission();
     final fCMToken = await _firebaseMessaging.getToken();
-
-    print('Token:  $fCMToken');
     initPushNotifications();
     initLocalNotifications();
+
+    final deviceData = {
+      "nombre": await getDeviceData(),
+      "token": fCMToken.toString()
+    };
+    _notificationService.saveDevice(deviceData);
+  }
+
+  Future<String> getDeviceData() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+    try {
+      if (Platform.isAndroid) {
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        return androidInfo.model.toString();
+      } else if (Platform.isIOS) {
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        return iosInfo.utsname.machine.toString();
+      } else if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+        return Platform.operatingSystem.toString();
+      } else if (Platform.isFuchsia) {
+        return 'Fuchsia';
+      } else {
+        return 'Unknown';
+      }
+    } catch (e) {
+      return 'Failed to get device data: $e';
+    }
   }
 }
