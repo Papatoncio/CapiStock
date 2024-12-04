@@ -41,15 +41,17 @@ class ProductService {
     var request = http.MultipartRequest('PUT', Uri.parse(url));
 
     // Adjuntar el archivo
-    var fileStream = http.ByteStream(productImage.openRead());
-    var fileLength = await productImage.length();
-    var multipartFile = http.MultipartFile(
-      'productImage', // Clave del archivo en form-data
-      fileStream,
-      fileLength,
-      filename: path.basename(productImage.path), // Nombre del archivo
-    );
-    request.files.add(multipartFile);
+    if (!productImage.path.startsWith('http')) {
+      var fileStream = http.ByteStream(productImage.openRead());
+      var fileLength = await productImage.length();
+      var multipartFile = http.MultipartFile(
+        'productImage', // Clave del archivo en form-data
+        fileStream,
+        fileLength,
+        filename: path.basename(productImage.path), // Nombre del archivo
+      );
+      request.files.add(multipartFile);
+    }
 
     // Adjuntar el JSON como un campo de texto
     request.fields['product'] = jsonEncode(productData);
@@ -63,7 +65,7 @@ class ProductService {
     var response = await request.send();
 
     // Manejar la respuesta
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       var responseData = await response.stream.bytesToString();
       // Decodificar la respuesta JSON y extraer el mensaje
       final responseJson = jsonDecode(responseData);

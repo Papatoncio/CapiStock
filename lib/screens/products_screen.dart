@@ -33,9 +33,50 @@ class _ProductsScreenState extends State<ProductsScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Error: ${snapshot.error}'),
+                  const SizedBox(height: 16.0),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _productsFuture = _productService.fetchProducts();
+                      });
+                    },
+                    child: const Text('Reintentar'),
+                  ),
+                ],
+              ),
+            );
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No hay productos disponibles.'));
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('No hay productos disponibles.'),
+                  const SizedBox(height: 16.0),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AddProductScreen(),
+                        ),
+                      ).then((value) {
+                        if (value == true) {
+                          setState(() {
+                            _productsFuture = _productService.fetchProducts();
+                          });
+                        }
+                      });
+                    },
+                    child: const Text('Agregar producto'),
+                  ),
+                ],
+              ),
+            );
           }
 
           final products = snapshot.data!;
@@ -81,13 +122,19 @@ class _ProductsScreenState extends State<ProductsScreen> {
   Widget _buildCard(Product product) {
     return GestureDetector(
       onTap: () {
-        // Navega a la pantalla de detalle
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => ProductDetailScreen(product: product),
           ),
-        );
+        ).then((value) {
+          if (value == true) {
+            // Si se modificó un producto, recarga la lista
+            setState(() {
+              _productsFuture = _productService.fetchProducts();
+            });
+          }
+        });
       },
       child: Card(
         elevation: 4,

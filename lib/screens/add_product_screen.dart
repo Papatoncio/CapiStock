@@ -83,7 +83,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
     try {
       _productService.saveProduct(File(_imagePath!), newProduct);
-      Navigator.pop(context);
+      Navigator.pop(context, true);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al guardar el producto: $e')),
